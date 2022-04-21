@@ -20,7 +20,8 @@ class GroupController extends Controller
     {
         $groups = Group::where('agency', '=', Auth::user()->agency)->paginate(10);
 
-        return view('groups.index', compact('groups'));
+        return view('groups.index', compact('groups'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -31,6 +32,7 @@ class GroupController extends Controller
      */
     public function store(StoreGroupRequest $request)
     {
+        $request->merge(['agency' => Auth::user()->agency]);
         Group::create($request->all());
 
         return redirect()->route('group.index');

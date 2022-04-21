@@ -6,7 +6,6 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Facade\FlareClient\Http\Response;
 use App\Http\Requests\StoreTeacherRequest;
 use App\Http\Requests\UpdateTeacherRequest;
 
@@ -19,12 +18,13 @@ class TeacherController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->header('Accept') === 'application/json'){
-            return Subject::where('agency', '=', Auth::user()->agency)->get();
+        if($request->wantsJson()) {
+            return Teacher::with('subjects')->where('agency', '=', Auth::user()->agency)->get();
         }
         else {
-            $teachers = Teacher::where('agency', '=', Auth::user()->agency)->paginate(10);
-            return view('teachers.index', compact('teachers'))
+            $teachers = Teacher::with('subjects')->where('agency', '=', Auth::user()->agency)->paginate(10);
+            $subjects = Subject::all();
+            return view('teachers.index', compact('teachers', 'subjects'))
                 ->with('i', (request()->input('page', 1) - 1) * 10);
         }
     }
@@ -93,9 +93,11 @@ class TeacherController extends Controller
      * @param  \App\Models\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $teacher)
+    public function destroy(Teacher $teacher, Request $request)
     {
         $teacher->delete();
+
+        return redirect()->route('teacher.index');
     }
 
     /**
@@ -105,8 +107,8 @@ class TeacherController extends Controller
      */
     public function append_subject(Request $request)
     {
-        $teacher_id = $request->get('teacher');
-        $subject_id = $request->get('subject');
+        $teacher_id = $request->get('teacher_id');
+        $subject_id = $request->get('subject_id');
 
         if (false === Teacher::join('subject_teacher', 'teachers.id', '=', 'subject_teacher.teacher_id')
             ->where([
@@ -116,11 +118,11 @@ class TeacherController extends Controller
         ) {
             Teacher::find($teacher_id)->subjects()->attach($subject_id);
             return redirect()->route('teacher.index')
-                ->with('success', 'Udało się dodać!.');
+                ->withSuccess('Udało się dodać!');
         }
 
         return redirect()->route('teacher.index')
-            ->with('error', 'Nauczyciel już ma przporządkowany ten przedmiot!.');
+            ->withErrors('Nauczyciel już ma przporządkowany ten przedmiot!');
     }
 
     public function remove_subject(Request $request)

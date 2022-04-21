@@ -85,9 +85,9 @@
             <div class="row mb-3 border rounded">
                 <div class="col-sm-5">
                     <b>{{ $sch->date }} {{ $sch->start_time }}-{{ $sch->end_time }}</b><br>
-                    Przedmiot <b>{{ $sch->subject->name }}</b><br>
-                    Prowadzącym <b>{{ $sch->teacher->name }}</b><br>
-                    Sala <b>{{ $sch->room->name}}</b><br>
+                    Przedmiot: <b>{{ $sch->subject->name }}</b><br>
+                    Prowadzącym: <b>{{ $sch->teacher->name }}</b><br>
+                    Sala: <b>{{ $sch->room->name ?? 'Brak'}}</b><br>
                 </div>
                 <div class="col-sm-6">
                     Grupy:
@@ -194,12 +194,4 @@
         })
     })
 </script>
-
-<div id="load_screen" class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
-    <div class="modal-dialog modal-sm" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)">
-        <div class="modal-content" style="width: 0; border: 0;">
-            <div class="spinner-border text-info" role="status" style="width: 10rem; height: 10rem; border-width: 20px;"></div>
-        </div>
-    </div>
-</div>
 @endsection

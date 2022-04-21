@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subject;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,10 @@ class SubjectController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->header('Accept') === 'application/json'){
-            $subjects = Subject::all();
-            return $subjects;
+        if($request->wantsJson()) {
+            $teacher = Teacher::with('subjects')
+                ->find($request->get('teacher_id', '*'));
+            return $teacher->subjects;
         }
         else
         {
@@ -38,6 +40,7 @@ class SubjectController extends Controller
      */
     public function store(StoreSubjectRequest $request)
     {
+        $request->merge(['agency' => Auth::user()->agency]);
         Subject::create($request->all());
 
         return redirect()->route('subject.index');

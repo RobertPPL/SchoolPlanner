@@ -14,13 +14,12 @@ class Teacher extends Model
     use TraitUuid;
 
     protected $fillable = [
-        'name'
+        'name', 'agency'
     ];
 
     protected static function boot()
     {
         parent::boot();
-        // TraitUuid::boot();
         $creationCallback = function ($model) {
             if (empty($model->{$model->getKeyName()}))
             {
@@ -34,6 +33,9 @@ class Teacher extends Model
             function($model)
             {
                 $model->subjects()->detach();
+                foreach($model->schedules()->get() as $schedule){
+                    $schedule->delete();
+                }
             }
         );
     }

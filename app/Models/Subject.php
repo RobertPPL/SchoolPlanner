@@ -13,7 +13,7 @@ class Subject extends Model
     use TraitUuid;
 
     protected $fillable = [
-        'name'
+        'name', 'agency'
     ];
 
     public $incrementing = false;

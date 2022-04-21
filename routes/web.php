@@ -38,5 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/schedule/{date?}', [ScheduleController::class, 'index'])->name('schedule.index');
     Route::resource('/schedule', ScheduleController::class)->only('store', 'update', 'destroy');
+
+    Route::post('/room/destroy_many', [RoomController::class, 'destroy_many'])->name('room.destroy_many');
     Route::resource('/room', RoomController::class);
 });

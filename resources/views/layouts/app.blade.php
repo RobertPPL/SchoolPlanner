@@ -67,6 +67,15 @@
                                 <li><a class="dropdown-item" href="{{ route('schedule.index') }}">{{ __('Lista') }}</a></li>
                             </ul>
                     </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sale
+                        </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{{ route('room.index') }}">{{ __('Lista') }}</a></li>
+                            </ul>
+                    </div>
                     @endauth
                     
                     <!-- Right Side Of Navbar -->
@@ -111,6 +120,14 @@
         <main class="py-4">
             @yield('content')
         </main>
+</div>
+
+<div id="load_screen" class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-sm" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+        <div class="modal-content" style="width: 0; border: 0;">
+            <div class="spinner-border text-info" role="status" style="width: 10rem; height: 10rem; border-width: 20px;"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

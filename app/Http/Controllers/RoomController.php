@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
 
@@ -13,9 +15,16 @@ class RoomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->wantsJson()) {
+            return Room::all();
+        }
+
+        $rooms = Room::where('agency', '=', Auth::user()->agency)->paginate(10);
+
+        return view('rooms.index', compact('rooms'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -25,7 +34,7 @@ class RoomController extends Controller
      */
     public function create()
     {
-        //
+        return view('rooms.index');
     }
 
     /**
@@ -36,7 +45,10 @@ class RoomController extends Controller
      */
     public function store(StoreRoomRequest $request)
     {
-        //
+        $request->merge(['agency' => Auth::user()->agency]);
+        Room::create($request->all());
+
+        return redirect()->route('room.index');
     }
 
     /**
@@ -47,7 +59,7 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
-        //
+        return view('room.show', compact('room'));
     }
 
     /**
@@ -58,7 +70,7 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
-        //
+        return view('room.edit', compact('room'));
     }
 
     /**
@@ -70,7 +82,7 @@ class RoomController extends Controller
      */
     public function update(UpdateRoomRequest $request, Room $room)
     {
-        //
+        $room->update($request->validated());
     }
 
     /**
@@ -81,6 +93,13 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
-        //
+        return view('room.edit', compact('room'));
+    }
+
+    public function destroy_many(Request $request)
+    {
+        $groups = $request->get('room_id');
+        Room::destroy($groups);
+        return redirect()->route('room.index');
     }
 }
