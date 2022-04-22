@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class RoomIsFree implements Rule
 {
+    private $date;
     private DateTime $start;
     private DateTime $end;
 
@@ -18,7 +19,7 @@ class RoomIsFree implements Rule
      */
     public function __construct($date, $start, $end)
     {
-        // $this->room = Teacher::find($room_id);
+        $this->date = $date;
         $this->start = new DateTime(sprintf('%s %s', $date, $start));
         $this->end = new DateTime(sprintf('%s %s', $date, $end));
     }
@@ -33,9 +34,9 @@ class RoomIsFree implements Rule
     public function passes($attribute, $value)
     {
         $can = Schedule::whereTime('start_time', '<', $this->end)
+            ->whereDate('date', '=', $this->date)
             ->whereTime('end_time', '>', $this->start)
             ->where('room_id', '=', $value)
-            // ->where('subject_id', '<>', $this->input('subject_id'))
             ->exists();
 
         return !$can;

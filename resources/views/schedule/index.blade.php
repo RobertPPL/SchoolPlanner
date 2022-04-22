@@ -161,7 +161,7 @@
 </div>
 
 <script type="text/javascript">
-    date.valueAsDate = new Date()
+    // date.valueAsDate = new Date()
 
     $(document).on('show.bs.modal','.modal', function (e) {
             $('#confirm-delete').find('.modal-header').text('Proszę potwierdzić.')

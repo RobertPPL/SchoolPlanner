@@ -29,18 +29,18 @@ class StoreScheduleRequest extends FormRequest
         return [
             'group_id' => [
                 'required',
-                new GroupIsFree($this->input('$date'), $this->input('start_time'), $this->input('end_time'))
+                new GroupIsFree($this->input('date'), $this->input('start_time'), $this->input('end_time'))
             ],
             'date' => 'required|date_format:"Y-m-d"',
             'start_time' => 'required|date_format:"H:i"',
             'end_time' => 'required|date_format:"H:i"|after:start_time',
             'teacher_id' => [
                 'required',
-                new TeacherNotBusy($this->input('$date'), $this->input('start_time'), $this->input('end_time')),
+                new TeacherNotBusy($this->input('date'), $this->input('start_time'), $this->input('end_time')),
                 
             ],
             'room_id' => [
-                new RoomIsFree($this->input('$date'), $this->input('start_time'), $this->input('end_time')),
+                new RoomIsFree($this->input('date'), $this->input('start_time'), $this->input('end_time')),
             ],
             'subject_id' => 'required'
         ];

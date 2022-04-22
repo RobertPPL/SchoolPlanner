@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class GroupIsFree implements Rule
 {
+    private $date;
     private DateTime $start;
     private DateTime $end;
 
@@ -18,6 +19,7 @@ class GroupIsFree implements Rule
      */
     public function __construct($date, $start, $end)
     {
+        $this->date = $date;
         $this->start = new DateTime(sprintf('%s %s', $date, $start));
         $this->end = new DateTime(sprintf('%s %s', $date, $end));
     }
@@ -32,9 +34,10 @@ class GroupIsFree implements Rule
     public function passes($attribute, $value)
     {
         $can = Schedule::whereTime('start_time', '<', $this->end)
-            ->whereTime('end_time', '>', $this->start)
-            ->where('group_id', '=', $value)
-            ->exists();
+        ->whereDate('date', '=', $this->date)
+        ->whereTime('end_time', '>', $this->start)
+        ->where('group_id', '=', $value)
+        ->exists();
 
         return !$can;
     }
