@@ -24,7 +24,7 @@
     </div>
     @endif
 
-    <form id="form_store" action="{{ route('schedule.store') }}" method="POST" class="form card p-3 bg-light">
+    <form id="form_store" action="{{ route('schedule.store') }}" method="POST" class="form border p-3 bg-light mb-3">
         @csrf
         <div class="form-group mb-3">
             <select name="group_id" class="form-select @error('group') is-invalid @enderror" aria-label="Default select example" required>
@@ -73,46 +73,42 @@
             <input type="submit" value="Zapisz" class="btn btn-primary">
         </div>
     </form>
-    <br>
 
-    <div class="mb-3">
+    <div class="mb-3 p-3">
         <a class="btn btn-primary" href="{{ $link_previous_day }}">Poprzedni dzień</a>
         <a class="btn btn-primary" style="float: right" href="{{ $link_next_day }}">Następny dzień</a>
     </div>
     
-    <div>
+    <div class="p-3">
         @foreach($schedule as $sch)
-            <div class="row mb-3 border rounded">
-                <div class="col-sm-5">
-                    <b>{{ $sch->date }} {{ $sch->start_time }}-{{ $sch->end_time }}</b><br>
-                    Przedmiot: <b>{{ $sch->subject->name }}</b><br>
-                    Prowadzącym: <b>{{ $sch->teacher->name }}</b><br>
-                    Sala: <b>{{ $sch->room->name ?? 'Brak'}}</b><br>
+            <div class="mb-3 border rounded">
+
+                <div class="dropdown" style="float: right">
+                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-href="{{ route('schedule.destroy', $sch->id) }}" data-bs-toggle="modal"
+                            data-bs-target="#confirm-delete">
+                                Usuń
+                        </button>
+
+                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add-group"
+                            data-value="{{ $teacher->id }}" data-url="{{ route('teacher.appendsubject') }}">
+                            Dodaj grupę
+                        </button>
+                    </div>
                 </div>
-                <div class="col-sm-6">
+
+                <div>
+                    <b>{{ $sch->date }} {{ $sch->start_time }} - {{ $sch->end_time }}</b><br>
+                    Przedmiot: <b>{{ $sch->subject->name }}</b><br>
+                    Prowadzący: <b>{{ $sch->teacher->name }}</b><br>
+                    Sala: <b>{{ $sch->room->name ?? 'Brak'}}</b><br>
                     Grupy:
                     <ul>
                         @foreach($sch->groups as $group)
                             <li><b>{{ $group->name }}</b></li>
                         @endforeach
-                        <form>
-                            @csrf
-                            <input type="hidden" value="{{ $sch->id }}">
-                            <li>
-                                <select name="ggg" class="form-select">
-                                    @foreach($groups as $group)
-                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
-                                    @endforeach
-                                </select>
-                            </li>
-                        </form>
                     </ul>
-                </div>
-                <br>
-                <div class="col-md-1">
-                    <button class="btn btn-danger pull-right" data-href="{{ route('schedule.destroy', $sch->id) }}" data-bs-toggle="modal" data-bs-target="#confirm-delete">
-                            Usuń
-                    </button>
                 </div>
             </div>
         @endforeach
@@ -148,6 +144,30 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="add-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form method="post" action="" class="form-attach">
+        @csrf
+        @method('patch')
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">Proszę wybrać grupę.</div>
+                <div class="modal-body">
+                    <input type="hidden" name="schedule_id" class="form-control">
+                    <select name="group_id" class="form-select">
+                        @foreach($groups as $group)
+                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" value="Dodaj">
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                    </div>
+                </div>
+        </div>
+    </form>
 </div>
 
 <script type="text/javascript">

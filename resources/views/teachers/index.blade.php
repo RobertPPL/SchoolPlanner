@@ -3,13 +3,8 @@
 @section('content')
 
 <div class="container">
-    <form action="{{ route('teacher.store') }}" method="POST" class="form">
-        @csrf
-        <div class="input-group mb-3">
-            <input type="text" name="name" id="teacher_name" placeholder="Wprowadź identyfikator nauczyciela" maxlength="101" class="form-control @error('name') is-invalid @enderror">
-            <input type="submit" value="Dodaj" class="btn btn-secondary">
-        </div>
-    </form>
+    <x-forms.insert-new-value store-route="{{ route('teacher.store') }}" />
+
     @if(\Session::has('success'))
     <div class="alert alert-success">
         {{ Session::get('success') }}
@@ -36,7 +31,7 @@
             @foreach ($teachers as $teacher)
                 <tr>
                     <td>
-                    <div class="dropdown" style="float: right">
+                        <div class="dropdown" style="float: right">
                             <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                             <div class="dropdown-menu">
                                 <button name="remove_teacher" type="button" class="dropdown-item" data-url="{{ route('teacher.destroy', $teacher->id) }}"
@@ -109,9 +104,10 @@
 </div>
 
 <div class="modal fade test" id="remove-subject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form method="post" action="" class="form-attach">
+    <form method="post" action="{{ route('teacher.dettachsubject') }}" class="form-dettach">
         @csrf
         @method('patch')
+        <input type="hidden" name="teacher_id" class="form-control">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">Proszę wybrać przedmiot(y).</div>
@@ -119,9 +115,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="spinner-border text-info" role="status"></div>
                     </div>
-                    <div id="subject_items" class="form-check form-switch">
-                        <input type="text" name="teacher_id" class="form-control" hidden>
-                    </div>
+                    <div id="subject_items" class="form-check form-switch"></div>
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-danger" value="Usuń">
@@ -138,11 +132,12 @@ $(document).ready(() => {
         $('#confirm-delete').find('.form-delete').attr('action', $(e.relatedTarget).data('url'))
         $('#add-subject').find('.form-attach').attr('action', $(e.relatedTarget).data('url'))
         $('#add-subject').find('[name="teacher_id"]').val($(e.relatedTarget).data('value'))
-        $('#remove-subject').find('[name="teacher_id"]').val($(e.relatedTarget).data('value'))
+        
     })
 
     $(document).on('show.bs.modal','#remove-subject', function (e) {
         let value = $(e.relatedTarget).data('value')
+        $('#remove-subject').find('[name="teacher_id"]').val($(e.relatedTarget).data('value'))
         $.ajax({
             method: 'get',
             headers: {
@@ -165,7 +160,7 @@ $(document).ready(() => {
             },
             success: (e) => {
                 $('#subject_items').empty()
-                e.forEach(x => $('#subject_items').append(`<label><input class="form-check-input" type="checkbox" name="subjects[]" value="${x.id}">${x.name}</label><br>`))
+                e.forEach(x => $('#subject_items').append(`<label><input class="form-check-input" type="checkbox" name="subjects_id[]" value="${x.id}">${x.name}</label><br>`))
             }
         })
     })

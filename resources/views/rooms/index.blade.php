@@ -3,13 +3,8 @@
 @section('content')
 
 <div class="container">
-    <form action="{{ route('group.store') }}" method="POST" class="form">
-        @csrf
-        <div class="input-group mb-3">
-            <input type="text" name="name" id="group_name" placeholder="Wprowadź identyfikator grupy" maxlength="100" class="form-control @error('name') is-invalid @enderror">
-            <input type="submit" value="Dodaj" class="btn btn-secondary">
-        </div>
-    </form>
+    <x-forms.insert-new-value store-route="{{ route('room.store') }}" />
+
     @if(\Session::has('success'))
     <div class="alert alert-success">
         {{ Session::get('success') }}

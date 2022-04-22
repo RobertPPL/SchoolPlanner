@@ -127,8 +127,10 @@ class TeacherController extends Controller
 
     public function remove_subject(Request $request)
     {
-        $teacher_id = $request->get('teacher');
-        $subject_id = $request->get('subjects');
+        $teacher_id = $request->get('teacher_id');
+        $subject_id = $request->get('subjects_id');
+
+        // dd($teacher_id, $subject_id);
 
         Teacher::find($teacher_id)->subjects()->detach($subject_id);
 
