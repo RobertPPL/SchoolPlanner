@@ -28,7 +28,7 @@
     @endif
 </div>
 
-<form class="container form" method="POST" action="{{ route('subject.destroy_many') }}" onsubmit="validate()">
+<form class="container form" method="POST" action="{{ route('subject.destroy_many') }}">
     @csrf
     <div class="form-check form-switch" style="border-bottom: 1px solid silver; padding: 10px 0 10px 50px">
         <input type="checkbox" class="form-check-input" id="select_all" onclick="toggleCheckox(this)">
@@ -68,13 +68,6 @@
     function toggleCheckox(element) {
         const checkboxes = document.querySelectorAll('input[name="subject_id[]"]')
         checkboxes.forEach(checkbox => checkbox.checked = element.checked)
-    }
-
-    function validate(event) {
-        if(false === confirm("Napewno usunąć wskazane elementy?")){
-            event.preventDefault()
-        }
-        return false;
     }
 </script>
 @endsection

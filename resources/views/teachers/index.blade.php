@@ -178,26 +178,5 @@ $(document).ready(() => {
         })
     })
 })
-
-function deleteButton(target)
-{
-    let result = false;
-
-    if(target.form.elements['subjects[]'].length === undefined) {
-        result = target.form.elements['subjects[]'].checked
-    } else {
-        
-        for(var i = 0; i < target.form.elements['subjects[]'].length; i++)
-        {
-            result = (target.form.elements['subjects[]'][i].checked ? true : false)
-            if(result) {
-                break;
-            }
-        }
-    }
-
-    target.form.elements['delete'].hidden = !result;
-}
-
 </script>
 @endsection

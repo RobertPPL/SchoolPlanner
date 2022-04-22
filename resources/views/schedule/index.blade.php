@@ -38,7 +38,7 @@
         <div class="form-group mb-3">
             <div class="input-group">
                 <span class="input-group-text">Data</span>
-                <input id="date" type="date" name="date" class="form-control @error('date') is-invalid @enderror" required>
+                <input id="date" type="date" name="date" class="form-control @error('date') is-invalid @enderror" value="{{ old('date') ?? date('Y-m-d') }}"required>
 
                 <span class="input-group-text">Od</span>
                 <input id="start_time" type="time" name="start_time" id="start_time" value="{{ old('start_time') }}" class="form-control @error('start_time') is-invalid @enderror" required>
@@ -161,8 +161,6 @@
 </div>
 
 <script type="text/javascript">
-    // date.valueAsDate = new Date()
-
     $(document).on('show.bs.modal','.modal', function (e) {
             $('#confirm-delete').find('.modal-header').text('Proszę potwierdzić.')
             $('#confirm-delete').find('.modal-body').text('Na pewno usunąć ten element?')
