@@ -1,7 +1,7 @@
-<div class="mb-3 p-3">
+<div class="mb-3 p-3 btn-group">
         <a class="btn btn-primary" href="{{ $link_previous_day }}">Poprzedni dzień</a>
-        <a class="btn btn-primary" href="{{ $link_previous_day }}">Dziś</a>
-        <a class="btn btn-primary" style="float: right" href="{{ $link_today }}">Następny dzień</a>
+        <a class="btn btn-primary" href="{{ $link_today }}">Dziś</a>
+        <a class="btn btn-primary" href="{{ $link_previous_day }}">Następny dzień</a>
     </div>
     
     <div class="p-3">
