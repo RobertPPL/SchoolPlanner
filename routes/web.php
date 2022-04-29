@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/subject/destroy_many', [SubjectController::class, 'destroy_many'])->name('subject.destroy_many');
     Route::resource('/subject', SubjectController::class)->only('index', 'store', 'update', 'destroy');
 
+    Route::patch('/schedule/attach_group', [ScheduleController::class, 'attachGroupToSchedule'])->name('schedule.attach_group');
     Route::get('/schedule/{date?}', [ScheduleController::class, 'index'])->name('schedule.index');
     Route::resource('/schedule', ScheduleController::class)->only('store', 'update', 'destroy');
 

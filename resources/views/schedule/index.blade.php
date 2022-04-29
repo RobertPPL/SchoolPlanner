@@ -74,45 +74,8 @@
         </div>
     </form>
 
-    <div class="mb-3 p-3">
-        <a class="btn btn-primary" href="{{ $link_previous_day }}">Poprzedni dzień</a>
-        <a class="btn btn-primary" style="float: right" href="{{ $link_next_day }}">Następny dzień</a>
-    </div>
-    
-    <div class="p-3">
-        @foreach($schedule as $sch)
-            <div class="mb-3 border rounded">
+    @include('schedule.daily')
 
-                <div class="dropdown" style="float: right">
-                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                    <div class="dropdown-menu">
-                        <button class="dropdown-item" data-href="{{ route('schedule.destroy', $sch->id) }}" data-bs-toggle="modal"
-                            data-bs-target="#confirm-delete">
-                                Usuń
-                        </button>
-
-                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add-group"
-                            data-value="{{ $teacher->id }}" data-url="{{ route('teacher.appendsubject') }}">
-                            Dodaj grupę
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <b>{{ $sch->date }} {{ $sch->start_time }} - {{ $sch->end_time }}</b><br>
-                    Przedmiot: <b>{{ $sch->subject->name }}</b><br>
-                    Prowadzący: <b>{{ $sch->teacher->name }}</b><br>
-                    Sala: <b>{{ $sch->room->name ?? 'Brak'}}</b><br>
-                    Grupy:
-                    <ul>
-                        @foreach($sch->groups as $group)
-                            <li><b>{{ $group->name }}</b></li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endforeach
-    </div>
 </div>
 
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -137,7 +100,7 @@
 </div>
 
 <div class="modal fade" id="add-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form method="post" action="" class="form-attach">
+    <form method="post" action="{{ route('schedule.attach_group') }}" class="form-attach">
         @csrf
         @method('patch')
         <div class="modal-dialog">
@@ -161,10 +124,14 @@
 </div>
 
 <script type="text/javascript">
-    $(document).on('show.bs.modal','.modal', function (e) {
+    $(document).on('show.bs.modal','#confirm-delete', function (e) {
             $('#confirm-delete').find('.modal-header').text('Proszę potwierdzić.')
             $('#confirm-delete').find('.modal-body').text('Na pewno usunąć ten element?')
             $('#confirm-delete').find('.form-delete').attr('action', $(e.relatedTarget).data('href'))
+    })
+
+    $(document).on('show.bs.modal','#add-group', function (e) {
+            $('#add-group').find('[name="schedule_id"]').val($(e.relatedTarget).data('value'))
     })
 
     $(document).ready(function() {
@@ -193,8 +160,6 @@
                 }
             })
             .done(function(response) {
-                console.log(typeof(response))
-                console.log(response)
                 response.forEach(x => console.log(x))
                 $('#subject_id').find('option').remove();
                 response.forEach(x => $('#subject_id').append(new Option(x.name, x.id)))

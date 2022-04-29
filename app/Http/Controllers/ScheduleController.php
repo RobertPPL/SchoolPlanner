@@ -11,6 +11,7 @@ use App\Services\DateLinkGenerator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
+use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
@@ -30,7 +31,8 @@ class ScheduleController extends Controller
             'teachers' => Teacher::where('agency', '=', Auth::user()->agency)->get(),
             'rooms' => Room::where('agency', '=', Auth::user()->agency)->get(),
             'link_next_day' => $links->nextDay(),
-            'link_previous_day' => $links->previousDay()
+            'link_previous_day' => $links->previousDay(),
+            'link_today' =>  $links->todayDay()
         ]);
     }
 
@@ -69,6 +71,14 @@ class ScheduleController extends Controller
     {
         $schedule->delete();
 
+        return redirect()->route('schedule.index');
+    }
+
+    public function attachGroupToSchedule(Request $request)
+    {
+        $schedule = Schedule::find($request->get('schedule_id'));
+        $schedule->groups()->attach($request->get('group_id'));
+        
         return redirect()->route('schedule.index');
     }
 }
