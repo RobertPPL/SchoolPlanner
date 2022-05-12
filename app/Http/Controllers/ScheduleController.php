@@ -39,32 +39,6 @@ class ScheduleController extends Controller
     }
 
     /**
-     * Return view with calendar for schedule, base on type of calendar.
-     *
-     * @param string $type
-     * @return \Illuminate\Http\Response
-     */
-    public function calandar($type = 'daily', $date = null)
-    {
-        $date = $date ?? Carbon::now();
-        switch($type) {
-            case  CalendarType::WEEK:
-                $now = Carbon::createFromDate($date);
-                $schedules = Schedule::with(['groups', 'teacher', 'subject', 'room'])
-                    ->whereBetween('date', [
-                        $now->startOfWeek()->format('Y-m-d'),
-                        $now->endOfWeek()->format('Y-m-d')
-                    ])
-                    ->orderBy('date')
-                    ->get()
-                    ->toJson();
-                return view('schedule.week', compact('schedules'));
-            default:
-                return 'Wrong type of Calendar';
-        }
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreScheduleRequest  $request
