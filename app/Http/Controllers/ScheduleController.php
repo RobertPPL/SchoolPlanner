@@ -51,7 +51,6 @@ class ScheduleController extends Controller
             case  CalendarType::WEEK:
                 $now = Carbon::createFromDate($date);
                 $schedules = Schedule::with(['groups', 'teacher', 'subject', 'room'])
-                    ->where('agency', '=', Auth::user()->agency)
                     ->whereBetween('date', [
                         $now->startOfWeek()->format('Y-m-d'),
                         $now->endOfWeek()->format('Y-m-d')
