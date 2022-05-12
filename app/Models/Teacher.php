@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Subject;
 use App\Traits\TraitUuid;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
