@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CalendarType;
 use DateTime;
 use App\Models\Room;
 use App\Models\Group;
@@ -12,7 +11,6 @@ use App\Services\DateLinkGenerator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
