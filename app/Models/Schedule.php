@@ -23,15 +23,6 @@ class Schedule extends Model
     {
         parent::boot();
 
-        $creationCallback = function ($model) {
-            if (empty($model->{$model->getKeyName()}))
-            {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
-            }
-        };
-
-        static::creating($creationCallback);
-
         static::deleting(
             function($model) {
                 $model->groups()->detach();

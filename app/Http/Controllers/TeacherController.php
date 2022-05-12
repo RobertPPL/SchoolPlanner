@@ -22,7 +22,7 @@ class TeacherController extends Controller
             return Teacher::with('subjects')->where('agency', '=', Auth::user()->agency)->get();
         }
         else {
-            $teachers = Teacher::with('subjects')->where('agency', '=', Auth::user()->agency)->paginate(10);
+            $teachers = Teacher::with('subjects')->paginate(10);
             $subjects = Subject::all();
             return view('teachers.index', compact('teachers', 'subjects'))
                 ->with('i', (request()->input('page', 1) - 1) * 10);

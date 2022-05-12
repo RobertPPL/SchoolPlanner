@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CalendarType;
 use DateTime;
 use App\Models\Room;
 use App\Models\Group;
@@ -11,6 +12,7 @@ use App\Services\DateLinkGenerator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
@@ -26,14 +28,41 @@ class ScheduleController extends Controller
         $links = new DateLinkGenerator($date, 'schedule.index');
 
         return view('schedule.index', [
-            'groups' => Group::where('agency', '=', Auth::user()->agency)->get(),
-            'schedule' => Schedule::with(['groups', 'teacher', 'subject', 'room'])->where('agency', '=', Auth::user()->agency)->where('date', '=', $date)->get(),
-            'teachers' => Teacher::where('agency', '=', Auth::user()->agency)->get(),
-            'rooms' => Room::where('agency', '=', Auth::user()->agency)->get(),
+            'groups' => Group::get(),
+            'schedule' => Schedule::with(['groups', 'teacher', 'subject', 'room'])->where('date', '=', $date)->get(),
+            'teachers' => Teacher::get(),
+            'rooms' => Room::get(),
             'link_next_day' => $links->nextDay(),
             'link_previous_day' => $links->previousDay(),
             'link_today' =>  $links->todayDay()
         ]);
+    }
+
+    /**
+     * Return view with calendar for schedule, base on type of calendar.
+     *
+     * @param string $type
+     * @return \Illuminate\Http\Response
+     */
+    public function calandar($type = 'daily', $date = null)
+    {
+        $date = $date ?? Carbon::now();
+        switch($type) {
+            case  CalendarType::WEEK:
+                $now = Carbon::createFromDate($date);
+                $schedules = Schedule::with(['groups', 'teacher', 'subject', 'room'])
+                    ->where('agency', '=', Auth::user()->agency)
+                    ->whereBetween('date', [
+                        $now->startOfWeek()->format('Y-m-d'),
+                        $now->endOfWeek()->format('Y-m-d')
+                    ])
+                    ->orderBy('date')
+                    ->get()
+                    ->toJson();
+                return view('schedule.week', compact('schedules'));
+            default:
+                return 'Wrong type of Calendar';
+        }
     }
 
     /**

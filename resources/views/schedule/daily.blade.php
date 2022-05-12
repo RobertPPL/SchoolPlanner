@@ -1,7 +1,20 @@
-<div class="mb-3 p-3 btn-group">
-        <a class="btn btn-primary" href="{{ $link_previous_day }}">Poprzedni dzień</a>
-        <a class="btn btn-primary" href="{{ $link_today }}">Dziś</a>
-        <a class="btn btn-primary" href="{{ $link_previous_day }}">Następny dzień</a>
+<div class="mb-3 p-3">
+
+        <div class="btn-group" role="group">
+            <a class="btn btn-primary" href="{{ $link_previous_day }}">Poprzedni dzień</a>
+            <a class="btn btn-primary" href="{{ $link_today }}">Dziś</a>
+            <a class="btn btn-primary" href="{{ $link_previous_day }}">Następny dzień</a>
+
+            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"">
+            Widok
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Dniowy</a>
+                <a class="dropdown-item" href="#">Tygodniowy</a>
+                <a class="dropdown-item" href="#">Miesięczny</a>
+                <a class="dropdown-item" href="#">10 najbliższych dni zajęciowych</a>
+            </div>
+        </div>
     </div>
     
     <div class="p-3">

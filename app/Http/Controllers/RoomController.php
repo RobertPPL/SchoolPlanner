@@ -21,7 +21,7 @@ class RoomController extends Controller
             return Room::all();
         }
 
-        $rooms = Room::where('agency', '=', Auth::user()->agency)->paginate(10);
+        $rooms = Room::paginate(10);
 
         return view('rooms.index', compact('rooms'))
             ->with('i', (request()->input('page', 1) - 1) * 10);

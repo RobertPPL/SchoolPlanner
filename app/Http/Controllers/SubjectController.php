@@ -22,12 +22,13 @@ class SubjectController extends Controller
     {
         if($request->wantsJson()) {
             $teacher = Teacher::with('subjects')
+                ->withoutGlobalScope('currentAgency')
                 ->find($request->get('teacher_id', '*'));
             return $teacher->subjects;
         }
         else
         {
-            $subjects = Subject::where('agency', '=', Auth::user()->agency)->paginate(10);
+            $subjects = Subject::paginate(10);
             return view('subjects.index', compact('subjects'));
         }
     }

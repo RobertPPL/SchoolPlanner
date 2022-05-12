@@ -18,7 +18,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::where('agency', '=', Auth::user()->agency)->paginate(10);
+        $groups = Group::paginate(10);
 
         return view('groups.index', compact('groups'))
             ->with('i', (request()->input('page', 1) - 1) * 10);

@@ -10,10 +10,8 @@ trait TraitUuid
      * Override the boot function from Laravel so that 
      * we give the model a new UUID when we create it.
      */
-    protected static function boot()
+    protected static function bootTraitUuid()
     {
-        parent::boot();
-
         $creationCallback = function ($model) {
             if (empty($model->{$model->getKeyName()}))
             {

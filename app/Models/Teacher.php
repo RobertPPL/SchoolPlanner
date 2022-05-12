@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Models\Subject;
 use App\Traits\TraitUuid;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Teacher extends Model
@@ -20,14 +22,6 @@ class Teacher extends Model
     protected static function boot()
     {
         parent::boot();
-        $creationCallback = function ($model) {
-            if (empty($model->{$model->getKeyName()}))
-            {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
-            }
-        };
-
-        static::creating($creationCallback);
 
         static::deleting(
             function($model)
@@ -38,6 +32,13 @@ class Teacher extends Model
                 }
             }
         );
+    }
+
+    public static function booted()
+    {
+        static::addGlobalScope('currentAgency', function (Builder $builder) {
+            $builder->where('agency', '=', Auth::user()->agency);
+        });
     }
 
     public $incrementing = false;
