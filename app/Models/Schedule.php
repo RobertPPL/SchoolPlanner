@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Group;
 use App\Traits\TraitUuid;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
