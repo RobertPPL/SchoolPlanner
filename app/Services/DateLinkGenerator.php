@@ -27,8 +27,9 @@ class DateLinkGenerator
         return route($this->route, $date->modify('-1 day')->format($format));
     }
 
-    public function todayDay(): string
+    public function todayDay($format = 'Y-m-d'): string
     {
-        return date("Y-m-d");
+        $date = clone $this->date;
+        return route($this->route, $date->format($format));
     }
 }

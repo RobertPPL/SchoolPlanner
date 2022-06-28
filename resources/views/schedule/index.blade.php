@@ -139,12 +139,12 @@
             e.target.parentNode.insertAdjacentHTML('beforebegin', `<li>${e.target.value}</li>`)
         })
 
-
         $('#teacher_id').change(function (e) {
             $.ajax({
                 headers: {
                     'Accept': 'application/json'
                 },
+                async: true,
                 type: 'post',
                 data: {
                     teacher_id: e.target.value,
@@ -156,13 +156,15 @@
                     $('#load_screen').modal('show')
                 },
                 complete: function() {
-                    $('#load_screen').modal('hide')
+                    // $('#load_screen').modal('hide')
+                    setTimeout(() => $('#load_screen').modal('hide'), 1000)
                 }
             })
             .done(function(response) {
-                response.forEach(x => console.log(x))
+                // response.forEach(x => console.log(x))
                 $('#subject_id').find('option').remove();
                 response.forEach(x => $('#subject_id').append(new Option(x.name, x.id)))
+                $('#load_screen').modal('hide')
             })
         })
     })
